@@ -53,7 +53,7 @@ module OffsitePayments #:nodoc:
             [field, @params[field]]
           }
 
-          hash_raw_data = "HashIV=#{OffsitePayments::Integrations::Pay2go.hash_iv}&#{raw_data}&HashKey=#{OffsitePayments::Integrations::Pay2go.hash_key}"
+          hash_raw_data = "HashIV=#{hash_iv}&#{raw_data}&HashKey=#{hash_key}"
           Digest::SHA256.hexdigest(hash_raw_data).upcase == check_code
         end
       end
