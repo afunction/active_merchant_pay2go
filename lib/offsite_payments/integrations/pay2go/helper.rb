@@ -23,19 +23,36 @@ module OffsitePayments #:nodoc:
             add_field field, OffsitePayments::Integrations::Pay2go.send(field.underscore.to_sym)
           end
         end
+
+        def hash_key(key)
+          @key = key
+        end
+
+        def hash_iv(iv)
+          @iv = iv
+        end
+
+        def merchant_hash_key
+          @key || OffsitePayments::Integrations::Pay2go.hash_key
+        end
+
+        def merchant_hash_iv
+          @iv || OffsitePayments::Integrations::Pay2go.hash_iv
+        end
+
         def time_stamp(date)
           add_field 'TimeStamp', date.to_time.to_i
         end
+
         def encrypted_data
           raw_data = URI.encode_www_form OffsitePayments::Integrations::Pay2go::CHECK_VALUE_FIELDS.sort.map { |field|
             [field, @fields[field]]
           }
 
-          hash_raw_data = "HashKey=#{OffsitePayments::Integrations::Pay2go.hash_key}&#{raw_data}&HashIV=#{OffsitePayments::Integrations::Pay2go.hash_iv}"
+          hash_raw_data = "HashKey=#{merchant_hash_key}&#{raw_data}&HashIV=#{merchant_hash_iv}"
           add_field 'CheckValue', Digest::SHA256.hexdigest(hash_raw_data).upcase
         end
       end
-
     end
   end
 end

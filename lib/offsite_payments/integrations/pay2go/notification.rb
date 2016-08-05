@@ -17,6 +17,22 @@ module OffsitePayments #:nodoc:
           end
         end
 
+        def hash_key=(key)
+          @hash_key = key
+        end
+
+        def hash_iv=(iv)
+          @hash_iv = iv
+        end
+
+        def hash_key
+          @hash_key || OffsitePayments::Integrations::Pay2go.hash_key
+        end
+
+        def hash_iv
+          @hash_iv || OffsitePayments::Integrations::Pay2go.hash_iv
+        end
+
         def success?
           status == 'SUCCESS'
         end
